@@ -1,4 +1,4 @@
-package com.pruebassolid2;
+package com.pruebassolid2.model;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

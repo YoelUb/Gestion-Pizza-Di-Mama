@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Login Trabajador - Pizzería Di Mama</title>
-    <link rel="stylesheet" href="../css/styleLogin.css">
+    <link rel="stylesheet" href="/css/styleLogin.css">
 
 </head>
 <body>
@@ -27,17 +27,29 @@
     document.getElementById("loginForm").addEventListener("submit", function(e) {
         e.preventDefault();
 
-        const username = document.getElementById("username").value;
+        const nombre = document.getElementById("username").value;
         const password = document.getElementById("password").value;
 
-        // Simulación de verificación (sustituir por tu backend más adelante)
-        if (username === "admin" && password === "1234") {
-            window.location.href = "trabajador.html";
-        } else {
-            document.getElementById("loginError").textContent = "❌ Credenciales incorrectas";
-        }
+        fetch("http://localhost:8080/api/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ nombre, password })
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data === true) {
+                    window.location.href = "trabajador.html";
+                } else {
+                    document.getElementById("loginError").textContent = "Credenciales incorrectas";
+                }
+            })
+            .catch(err => {
+                document.getElementById("loginError").textContent = "Error al conectar con el servidor";
+                console.error(err);
+            });
     });
 </script>
+
 
 </body>
 </html>
