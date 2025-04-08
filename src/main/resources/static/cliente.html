@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cliente - Pizzería Di Mama</title>
+  <link rel="stylesheet" href="../css/styleCliente.css">
+</head>
+<body>
+
+<header>🍕 Cliente - Pizzería Di Mama</header>
+
+<section>
+  <h2>📜 Carta de Pizzas</h2>
+  <div class="carta">
+    <div class="pizza-card">
+      <h3>Margarita</h3>
+      <p>Queso mozzarella, tomate fresco y albahaca</p>
+      <p>💰 8.50 €</p>
+    </div>
+    <div class="pizza-card">
+      <h3>Cuatro Quesos</h3>
+      <p>Parmesano, gorgonzola, mozzarella y emmental</p>
+      <p>💰 9.90 €</p>
+    </div>
+    <div class="pizza-card">
+      <h3>Hawaiana</h3>
+      <p>Jamón y piña</p>
+      <p>💰 9.50 €</p>
+    </div>
+    <div class="pizza-card">
+      <h3>Vegetariana</h3>
+      <p>Verduras frescas, cebolla, champiñones</p>
+      <p>💰 10.00 €</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>📝 Hacer un Pedido</h2>
+  <form id="formPedido">
+    <label for="cliente">Nombre del cliente</label>
+    <input type="text" id="cliente" required>
+
+    <label for="pizza">Tipo de pizza</label>
+    <select id="pizza" required>
+      <option disabled selected>Elige una pizza</option>
+      <option value="Margarita">Margarita</option>
+      <option value="Cuatro Quesos">Cuatro Quesos</option>
+      <option value="Hawaiana">Hawaiana</option>
+      <option value="Vegetariana">Vegetariana</option>
+    </select>
+
+    <label for="precio">Precio (€)</label>
+    <input type="number" id="precio" step="0.01" required readonly>
+
+    <label for="estado">Estado inicial</label>
+    <select id="estado">
+      <option>En preparación</option>
+    </select>
+
+    <button type="submit">Enviar pedido</button>
+    <div class="success" id="mensajeExito"></div>
+  </form>
+</section>
+
+<script>
+  const preciosPizza = {
+    "Margarita": 8.50,
+    "Cuatro Quesos": 9.90,
+    "Hawaiana": 9.50,
+    "Vegetariana": 10.00
+  };
+
+  const pizzaSelect = document.getElementById("pizza");
+  const precioInput = document.getElementById("precio");
+
+  pizzaSelect.addEventListener("change", () => {
+    const seleccion = pizzaSelect.value;
+    precioInput.value = preciosPizza[seleccion] || "";
+  });
+
+  document.getElementById("formPedido").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const pedido = {
+      customerName: document.getElementById("cliente").value,
+      pizzaType: pizzaSelect.value,
+      price: parseFloat(precioInput.value),
+      status: document.getElementById("estado").value
+    };
+
+    fetch("http://localhost:8080/api/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(pedido)
+    })
+            .then(res => res.json())
+            .then(data => {
+              document.getElementById("mensajeExito").textContent = "✅ Pedido enviado correctamente";
+              document.getElementById("formPedido").reset();
+              precioInput.value = "";
+            })
+            .catch(err => alert("❌ Error al enviar el pedido"));
+  });
+</script>
+
+</body>
+</html>

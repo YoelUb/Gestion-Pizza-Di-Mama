@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Pedidos - Pizzería Di Mama</title>
+    <link rel="stylesheet" href="../css/styleTrabajador.css">
+</head>
+<body>
+
+<h1>📋 Gestión de Pedidos</h1>
+
+<table id="tablaPedidos">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Cliente</th>
+        <th>Pizza</th>
+        <th>Precio</th>
+        <th>Estado</th>
+        <th>Actualizar</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- JS rellenará esto -->
+    </tbody>
+</table>
+
+<script>
+    function cargarPedidos() {
+        fetch("http://localhost:8080/api/orders")
+            .then(res => res.json())
+            .then(pedidos => {
+                const tabla = document.querySelector("#tablaPedidos tbody");
+                tabla.innerHTML = "";
+
+                pedidos.forEach(pedido => {
+                    const fila = document.createElement("tr");
+
+                    fila.innerHTML = `
+              <td>${pedido.id}</td>
+              <td>${pedido.customerName}</td>
+              <td>${pedido.pizzaType}</td>
+              <td>${pedido.price.toFixed(2)}</td>
+              <td>
+                <select id="estado-${pedido.id}">
+                  <option ${pedido.status === 'En preparación' ? 'selected' : ''}>En preparación</option>
+                  <option ${pedido.status === 'Entregado' ? 'selected' : ''}>Entregado</option>
+                </select>
+              </td>
+              <td>
+                <button onclick="actualizarEstado(${pedido.id})">Guardar</button>
+              </td>
+            `;
+                    tabla.appendChild(fila);
+                });
+            });
+    }
+
+    function actualizarEstado(id) {
+        const nuevoEstado = document.getElementById(`estado-${id}`).value;
+
+        fetch(`http://localhost:8080/api/orders/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ status: nuevoEstado })
+        })
+            .then(res => {
+                if (res.ok) {
+                    alert("✅ Estado actualizado");
+                    cargarPedidos(); // recarga los pedidos
+                } else {
+                    alert("❌ Error al actualizar estado");
+                }
+            });
+    }
+
+    // Cargar al inicio
+    window.onload = cargarPedidos;
+</script>
+</body>
+</html>

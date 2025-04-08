@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Trabajador - Pizzería Di Mama</title>
+    <link rel="stylesheet" href="../css/styleLogin.css">
+
+</head>
+<body>
+
+<header>🔐 Acceso para Trabajadores</header>
+
+<div class="container">
+    <form id="loginForm">
+        <label for="username">Nombre de usuario</label>
+        <input type="text" id="username" required>
+
+        <label for="password">Contraseña</label>
+        <input type="password" id="password" required>
+
+        <button type="submit">Ingresar</button>
+        <div class="error" id="loginError"></div>
+    </form>
+</div>
+
+<script>
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        // Simulación de verificación (sustituir por tu backend más adelante)
+        if (username === "admin" && password === "1234") {
+            window.location.href = "trabajador.html";
+        } else {
+            document.getElementById("loginError").textContent = "❌ Credenciales incorrectas";
+        }
+    });
+</script>
+
+</body>
+</html>
