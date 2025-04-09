@@ -1,6 +1,5 @@
 package com.pruebassolid2.model;
 
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,28 +7,36 @@ import java.sql.SQLException;
 
 public class Authenticator {
 
-    private final DataBaseManager dbManager;
-
-    public Authenticator(DataBaseManager dbManager) {
-        this.dbManager = dbManager;
-    }
-
     public boolean comprobacion(String nombre, String password) {
-        String sql = "SELECT * FROM trabajadores WHERE nombre = ? AND password = ?";
+        Connection connection = null;
 
-        try (Connection conn = dbManager.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try {
+            connection = DataBaseManager.getConnection();
 
-            stmt.setString(1, nombre);
-            stmt.setString(2, password);
+            if (connection == null || connection.isClosed()) {
+                System.err.println("Conexión no disponible o cerrada");
+                return false;
+            }
 
-            ResultSet rs = stmt.executeQuery();
-            return rs.next();
+            String query = "SELECT * FROM trabajadores WHERE nombre = ? AND password = ?";
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, nombre);
+            ps.setString(2, password);
+
+            ResultSet rs = ps.executeQuery();
+            return rs.next(); // true si encontró al usuario
 
         } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
+            System.err.println("Error al validar credenciales: " + e.getMessage());
+            return false; // En caso de error, devolver false en vez de romper
+        } finally {
+            try {
+                if (connection != null && !connection.isClosed()) {
+                    connection.close(); // Cerramos bien la conexión
+                }
+            } catch (SQLException e) {
+                System.err.println("Error al cerrar conexión: " + e.getMessage());
+            }
         }
     }
 }
-

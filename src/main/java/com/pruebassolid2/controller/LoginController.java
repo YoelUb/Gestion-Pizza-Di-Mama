@@ -11,7 +11,8 @@ public class LoginController {
     private final Authenticator authenticator;
 
     public LoginController() {
-        this.authenticator = new Authenticator(DataBaseManager.getInstance());
+        DataBaseManager.getInstance();
+        this.authenticator = new Authenticator();
     }
 
     @PostMapping("/login")

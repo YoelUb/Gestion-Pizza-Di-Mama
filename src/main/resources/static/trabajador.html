@@ -7,6 +7,12 @@
 </head>
 <body>
 
+<!-- NUEVO HEADER CON USUARIO Y CERRAR SESIÓN -->
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem;">
+    <h2>👋 Bienvenido, <span id="nombreUsuario"></span></h2>
+    <button onclick="cerrarSesion()" style="padding: 0.5rem 1rem;">Cerrar Sesión</button>
+</div>
+
 <h1>📋 Gestión de Pedidos</h1>
 
 <table id="tablaPedidos">
@@ -26,6 +32,19 @@
 </table>
 
 <script>
+    // Mostrar nombre del usuario
+    const usuario = localStorage.getItem("usuario");
+    if (!usuario) {
+        window.location.href = "login.html";
+    } else {
+        document.getElementById("nombreUsuario").innerText = usuario;
+    }
+
+    function cerrarSesion() {
+        localStorage.removeItem("usuario");
+        window.location.href = "login.html";
+    }
+
     function cargarPedidos() {
         fetch("http://localhost:8080/api/orders")
             .then(res => res.json())
@@ -38,17 +57,12 @@
 
                     fila.innerHTML = `
               <td>${pedido.id}</td>
-              <td>${pedido.customerName}</td>
-              <td>${pedido.pizzaType}</td>
-              <td>${pedido.price.toFixed(2)}</td>
+              <td>${pedido.customer}</td>
+              <td>${pedido.pizza}</td>
+              <td>${pedido.price}</td>
+              <td>${pedido.status}</td>
               <td>
-                <select id="estado-${pedido.id}">
-                  <option ${pedido.status === 'En preparación' ? 'selected' : ''}>En preparación</option>
-                  <option ${pedido.status === 'Entregado' ? 'selected' : ''}>Entregado</option>
-                </select>
-              </td>
-              <td>
-                <button onclick="actualizarEstado(${pedido.id})">Guardar</button>
+                <button onclick="actualizarPedido(${pedido.id})">Actualizar</button>
               </td>
             `;
                     tabla.appendChild(fila);
@@ -56,26 +70,13 @@
             });
     }
 
-    function actualizarEstado(id) {
-        const nuevoEstado = document.getElementById(`estado-${id}`).value;
-
-        fetch(`http://localhost:8080/api/orders/${id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ status: nuevoEstado })
-        })
-            .then(res => {
-                if (res.ok) {
-                    alert("✅ Estado actualizado");
-                    cargarPedidos(); // recarga los pedidos
-                } else {
-                    alert("❌ Error al actualizar estado");
-                }
-            });
+    function actualizarPedido(id) {
+        fetch(`http://localhost:8080/api/orders/${id}`, { method: "PUT" })
+            .then(() => cargarPedidos());
     }
 
-    // Cargar al inicio
-    window.onload = cargarPedidos;
+    cargarPedidos();
 </script>
+
 </body>
 </html>

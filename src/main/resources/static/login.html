@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Login Trabajador - Pizzería Di Mama</title>
     <link rel="stylesheet" href="/css/styleLogin.css">
-
 </head>
 <body>
 
@@ -21,6 +20,11 @@
         <button type="submit">Ingresar</button>
         <div class="error" id="loginError"></div>
     </form>
+
+    <!-- ✅ Nuevo botón para volver al inicio -->
+    <button onclick="window.location.href='index.html'" style="margin-top: 1rem;">
+        ⬅️ Volver al inicio
+    </button>
 </div>
 
 <script>
@@ -38,6 +42,10 @@
             .then(res => res.json())
             .then(data => {
                 if (data === true) {
+                    // ✅ Guardar el nombre del usuario en localStorage
+                    localStorage.setItem("usuario", nombre);
+
+                    // ✅ Redirigir a la página del trabajador
                     window.location.href = "trabajador.html";
                 } else {
                     document.getElementById("loginError").textContent = "Credenciales incorrectas";
@@ -49,7 +57,6 @@
             });
     });
 </script>
-
 
 </body>
 </html>
