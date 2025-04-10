@@ -94,3 +94,22 @@ button:hover {
     text-align: center;
     margin-top: 15px;
 }
+
+
+/* Botón compacto y centrado para volver al inicio */
+.btn-volver {
+    width: auto;
+    padding: 10px 20px;
+    font-size: 15px;
+    background-color: #e67e22;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin: 0 auto;
+}
+
+.btn-volver:hover {
+    background-color: #ca6f1e;
+}
