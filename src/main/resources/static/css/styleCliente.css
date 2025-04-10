@@ -66,11 +66,15 @@ input, select {
     border: 1px solid #ccc;
     font-weight: bold;
     text-align: center;
+    box-sizing: border-box;
 }
 
+/* Botón común para todos */
 button {
-    margin-top: 20px;
+    display: block;
+    margin: 20px auto 0 auto;
     width: 100%;
+    max-width: 300px;
     padding: 12px;
     font-size: 16px;
     background-color: #e67e22;
@@ -78,6 +82,7 @@ button {
     border: none;
     border-radius: 8px;
     cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
 }
 
 button:hover {

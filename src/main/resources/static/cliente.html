@@ -6,9 +6,7 @@
   <link rel="stylesheet" href="/css/styleCliente.css">
 </head>
 <body>
-
 <header>🍕 Cliente - Pizzería Di Mama</header>
-
 <section>
   <h2>📜 Carta de Pizzas</h2>
   <div class="carta">
@@ -63,6 +61,26 @@
   </form>
 </section>
 
+<section>
+  <h2>🔍 Revisa tu pedido</h2>
+  <form id="revisarForm">
+    <label for="buscarCliente">Nombre del cliente</label>
+    <input type="text" id="buscarCliente" required>
+
+    <label for="buscarId">ID del pedido</label>
+    <input type="number" id="buscarId" required>
+
+    <button type="submit">Buscar pedido</button>
+  </form>
+
+  <div id="resultadoPedido" style="margin-top: 1rem;"></div>
+</section>
+<section style="margin-top: 2rem;">
+  <button onclick="window.location.href='index.html'">
+    🏠 Volver al inicio
+  </button>
+</section>
+
 <script>
   const preciosPizza = {
     "Margarita": 8.50,
@@ -83,26 +101,60 @@
     e.preventDefault();
 
     const pedido = {
-      customerName: document.getElementById("cliente").value,
-      pizzaType: pizzaSelect.value,
-      price: parseFloat(precioInput.value),
-      status: document.getElementById("estado").value
+      cliente: document.getElementById("cliente").value,
+      pizza: pizzaSelect.value,
+      precio: parseFloat(precioInput.value),
+      estado: document.getElementById("estado").value
     };
 
-    fetch("http://localhost:8080/api/orders", {
+    const mensaje = document.getElementById("mensajeExito");
+    mensaje.textContent = "💳 Procesando pago...";
+
+    fetch("http://localhost:8080/api/pedidos", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(pedido)
     })
             .then(res => res.json())
             .then(data => {
-              document.getElementById("mensajeExito").textContent = "✅ Pedido enviado correctamente";
-              document.getElementById("formPedido").reset();
-              precioInput.value = "";
+              if (data.pedido) {
+                setTimeout(() => {
+                  mensaje.innerHTML = `✅ Pedido pagado correctamente. Tu ID de pedido es: <b>#${data.pedido.id}</b>`;
+                }, 1500);
+                document.getElementById("formPedido").reset();
+                precioInput.value = "";
+              } else {
+                mensaje.textContent = "❌ Error al realizar el pedido.";
+              }
             })
-            .catch(err => alert("❌ Error al enviar el pedido"));
+            .catch(() => {
+              mensaje.textContent = "❌ Error al conectar con el servidor.";
+            });
+  });
+
+  document.getElementById("revisarForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const cliente = document.getElementById("buscarCliente").value;
+    const id = document.getElementById("buscarId").value;
+
+    fetch(`http://localhost:8080/api/pedidos/buscar?cliente=${cliente}&id=${id}`)
+            .then(res => res.json())
+            .then(pedido => {
+              if (pedido && pedido.id) {
+                document.getElementById("resultadoPedido").innerHTML =
+                        `📦 Pedido #${pedido.id} de <b>${pedido.cliente}</b>:<br>
+          🍕 Pizza: <b>${pedido.pizza}</b><br>
+          💶 Precio: <b>${pedido.precio}€</b><br>
+          🔄 Estado: <b>${pedido.estado}</b>`;
+              } else {
+                document.getElementById("resultadoPedido").innerText = "❌ No se encontró el pedido.";
+              }
+            })
+            .catch(() => {
+              document.getElementById("resultadoPedido").innerText = "❌ Error al conectar con el servidor.";
+            });
   });
 </script>
-
 </body>
 </html>
