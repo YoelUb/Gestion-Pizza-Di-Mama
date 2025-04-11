@@ -1,10 +1,12 @@
 package com.pruebassolid2.model;
 
+import com.pruebassolid2.model.interfaces.IDataBaseManager;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class DataBaseManager {
+public class DataBaseManager implements IDataBaseManager {
 
     private static DataBaseManager instance;
     private static Connection connection;
@@ -46,5 +48,20 @@ public class DataBaseManager {
         }
 
         return connection;
+    }
+
+    @Override
+    public void guardarPedido(Pedido pedido) {
+        System.out.println("Pedido guardado: " + pedido);
+    }
+
+    @Override
+    public void actualizarPedido(int id, Pedido pedido) {
+        System.out.println("Pedido actualizado: " + id);
+    }
+
+    @Override
+    public void eliminarPedido(int id) {
+        System.out.println("Pedido eliminado: " + id);
     }
 }

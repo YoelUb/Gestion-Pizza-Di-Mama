@@ -1,6 +1,8 @@
 package com.pruebassolid2.model;
 
-public class PaymentProcessor {
+import com.pruebassolid2.model.interfaces.IPaymentProcessor;
+
+public class PaymentProcessor implements IPaymentProcessor {
 
     public boolean procesarPago(String cliente, double monto) {
         System.out.println("Procesando pago de " + monto + "€ para el cliente " + cliente);

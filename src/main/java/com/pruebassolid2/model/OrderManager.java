@@ -1,10 +1,12 @@
 package com.pruebassolid2.model;
 
+import com.pruebassolid2.model.interfaces.IOrderManager;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderManager {
+public class OrderManager implements IOrderManager {
 
     private final PaymentProcessor paymentProcessor;
 
