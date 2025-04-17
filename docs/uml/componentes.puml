@@ -1,0 +1,25 @@
+@startuml UML_Componentes_GestionPizzaDiMama
+
+package "Frontend Web" {
+  [HTML Cliente]
+  [HTML Trabajador]
+  [HTML Login]
+}
+
+package "API REST" {
+  [PedidoController] --> [OrderManager]
+  [LoginController] --> [Authenticator]
+  [ViewController]
+}
+
+package "Modelo" {
+  [OrderManager] --> [PaymentProcessor]
+  [OrderManager] --> [Pedido]
+  [Authenticator] --> [DataBaseManager]
+}
+
+[HTML Cliente] --> [PedidoController]
+[HTML Login] --> [LoginController]
+[HTML Trabajador] --> [PedidoController]
+
+@enduml
