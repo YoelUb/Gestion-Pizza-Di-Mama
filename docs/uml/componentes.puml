@@ -1,25 +1,22 @@
-@startuml UML_Componentes_GestionPizzaDiMama
+graph TD
+  subgraph Frontend
+    htmlCliente[HTML Cliente]
+    htmlTrabajador[HTML Trabajador]
+    htmlLogin[HTML Login]
+  end
 
-package "Frontend Web" {
-  [HTML Cliente]
-  [HTML Trabajador]
-  [HTML Login]
-}
+  subgraph API
+    PedidoController --> OrderManager
+    LoginController --> Authenticator
+    ViewController
+  end
 
-package "API REST" {
-  [PedidoController] --> [OrderManager]
-  [LoginController] --> [Authenticator]
-  [ViewController]
-}
+  subgraph Modelo
+    OrderManager --> Pedido
+    OrderManager --> PaymentProcessor
+    Authenticator --> DataBaseManager
+  end
 
-package "Modelo" {
-  [OrderManager] --> [PaymentProcessor]
-  [OrderManager] --> [Pedido]
-  [Authenticator] --> [DataBaseManager]
-}
-
-[HTML Cliente] --> [PedidoController]
-[HTML Login] --> [LoginController]
-[HTML Trabajador] --> [PedidoController]
-
-@enduml
+  htmlCliente --> PedidoController
+  htmlLogin --> LoginController
+  htmlTrabajador --> PedidoController
