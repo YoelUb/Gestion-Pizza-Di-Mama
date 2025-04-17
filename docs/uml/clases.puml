@@ -1,84 +1,92 @@
-classDiagram
+@startuml UML_Clases_GestionPizzaDiMama
+
+package "controller" {
   class PedidoController {
-    +crearPedido(pedido)
-    +actualizarPedido(pedido)
-    +eliminarPedido(id)
-    +buscarPedido(cliente, id)
-    +obtenerTodos()
+    - orderManager: OrderManager
+    + crearPedido(p: Pedido): Map
+    + actualizarPedido(p: Pedido): Map
+    + eliminarPedido(id: int): Map
+    + buscarPedido(cliente: String, id: int): Pedido
+    + obtenerTodos(): List<Pedido>
   }
 
   class LoginController {
-    +login(request)
-  }
-
-  class LoginRequest {
-    -nombre
-    -password
-    +getNombre()
-    +setNombre(nombre)
-    +getPassword()
-    +setPassword(password)
+    - authenticator: Authenticator
+    + login(request: LoginRequest): boolean
   }
 
   class ViewController {
-    +index()
+    + index(): String
   }
 
+  class LoginRequest {
+    - nombre: String
+    - password: String
+    + getNombre(): String
+    + setNombre(String): void
+    + getPassword(): String
+    + setPassword(String): void
+  }
+}
+
+package "model" {
   class Pedido {
-    -id
-    -cliente
-    -detalles
-    +getters/setters
+    - id: int
+    - cliente: String
+    - detalles: String
+    + getters/setters...
   }
 
-  class IOrderManager {
-    <<interface>>
-    +crearPedido(p)
-    +actualizarPedido(p)
-    +eliminarPedido(id)
-    +buscarPedidoPorClienteYId(c, id)
-    +obtenerTodos()
+  interface IOrderManager {
+    + crearPedido(p: Pedido): boolean
+    + actualizarPedido(p: Pedido): boolean
+    + eliminarPedido(id: int): boolean
+    + buscarPedidoPorClienteYId(c: String, id: int): Pedido
+    + obtenerTodos(): List<Pedido>
   }
 
-  class OrderManager {
-    -pedidos
-    -paymentProcessor
+  class OrderManager implements IOrderManager {
+    - pedidos: List<Pedido>
+    - paymentProcessor: IPaymentProcessor
+    + métodos de gestión de pedidos
   }
 
-  class IPaymentProcessor {
-    <<interface>>
-    +procesarPago(pedido)
+  interface IPaymentProcessor {
+    + procesarPago(pedido: Pedido): boolean
   }
 
-  class PaymentProcessor {
-    +procesarPago(pedido)
+  class PaymentProcessor implements IPaymentProcessor {
+    + procesarPago(pedido: Pedido): boolean
   }
 
-  class IAuthenticator {
-    <<interface>>
-    +comprobacion(usuario, password)
+  interface IAuthenticator {
+    + comprobacion(usuario: String, password: String): boolean
   }
 
-  class Authenticator {
-    +comprobacion(usuario, password)
+  class Authenticator implements IAuthenticator {
+    + comprobacion(usuario: String, password: String): boolean
   }
 
-  class IDataBaseManager {
-    <<interface>>
+  interface IDataBaseManager {
+    + método(s) para conexión y operaciones DB
   }
 
-  class DataBaseManager {
-    -instancia
-    +getInstance()
+  class DataBaseManager implements IDataBaseManager {
+    - static instancia: DataBaseManager
+    + getInstance(): DataBaseManager
+    + métodos DB...
   }
+}
 
-  PedidoController --> OrderManager
-  LoginController --> Authenticator
-  LoginController --> LoginRequest
-  OrderManager --> Pedido
-  OrderManager --> IPaymentProcessor
-  PaymentProcessor --|> IPaymentProcessor
-  OrderManager --|> IOrderManager
-  Authenticator --|> IAuthenticator
-  DataBaseManager --|> IDataBaseManager
-  Authenticator --> DataBaseManager
+PedidoController --> OrderManager
+LoginController --> Authenticator
+LoginController --> LoginRequest
+OrderManager --> Pedido
+OrderManager --> IPaymentProcessor
+PaymentProcessor ..|> IPaymentProcessor
+OrderManager ..|> IOrderManager
+Authenticator ..|> IAuthenticator
+DataBaseManager ..|> IDataBaseManager
+Authenticator --> DataBaseManager
+
+@enduml
