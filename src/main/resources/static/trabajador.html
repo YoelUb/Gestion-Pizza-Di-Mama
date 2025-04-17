@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Pedidos - Pizzería Di Mama</title>
+    <link rel="stylesheet" href="/css/styleTrabajador.css">
+</head>
+<body>
+
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem;">
+    <h2>👋 Bienvenido, <span id="nombreUsuario"></span></h2>
+    <button onclick="cerrarSesion()" style="padding: 0.5rem 1rem;">Cerrar Sesión</button>
+</div>
+
+<h1>📋 Gestión de Pedidos</h1>
+
+<table id="tablaPedidos">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Cliente</th>
+        <th>Pizza</th>
+        <th>Precio</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<script>
+    const usuario = localStorage.getItem("usuario");
+    if (!usuario) {
+        window.location.href = "login.html";
+    } else {
+        document.getElementById("nombreUsuario").innerText = usuario;
+    }
+
+    function cerrarSesion() {
+        localStorage.removeItem("usuario");
+        window.location.href = "login.html";
+    }
+
+    function cargarPedidos() {
+        fetch("http://localhost:8080/api/pedidos/buscar-todos")
+            .then(res => res.json())
+            .then(pedidos => {
+                const tabla = document.querySelector("#tablaPedidos tbody");
+                tabla.innerHTML = "";
+
+                pedidos.forEach(pedido => {
+                    const fila = document.createElement("tr");
+
+                    fila.innerHTML = `
+            <td>${pedido.id}</td>
+            <td>${pedido.cliente}</td>
+            <td>${pedido.pizza}</td>
+            <td>${pedido.precio}€</td>
+            <td>
+              <select id="estado-${pedido.id}">
+                <option ${pedido.estado === 'En preparación' ? 'selected' : ''}>En preparación</option>
+                <option ${pedido.estado === 'Preparado' ? 'selected' : ''}>Preparado</option>
+                <option ${pedido.estado === 'Entregado' ? 'selected' : ''}>Entregado</option>
+              </select>
+            </td>
+            <td>
+              <button onclick="actualizarEstado(${pedido.id})">Actualizar</button>
+              <button onclick="eliminarPedido(${pedido.id})" style="margin-left: 5px; background:red; color:white;">Eliminar</button>
+            </td>
+          `;
+                    tabla.appendChild(fila);
+                });
+            });
+    }
+
+    function actualizarEstado(id) {
+        const estado = document.getElementById(`estado-${id}`).value;
+
+        fetch("http://localhost:8080/api/pedidos", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id: id, estado: estado })
+        }).then(() => cargarPedidos());
+    }
+
+    function eliminarPedido(id) {
+        fetch(`http://localhost:8080/api/pedidos/${id}`, {
+            method: "DELETE"
+        }).then(() => cargarPedidos());
+    }
+
+    window.onload = cargarPedidos;
+</script>
+
+</body>
+</html>

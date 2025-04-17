@@ -1,0 +1,92 @@
+@startuml UML_Clases_GestionPizzaDiMama
+
+package "controller" {
+  class PedidoController {
+    - orderManager: OrderManager
+    + crearPedido(p: Pedido): Map
+    + actualizarPedido(p: Pedido): Map
+    + eliminarPedido(id: int): Map
+    + buscarPedido(cliente: String, id: int): Pedido
+    + obtenerTodos(): List<Pedido>
+  }
+
+  class LoginController {
+    - authenticator: Authenticator
+    + login(request: LoginRequest): boolean
+  }
+
+  class ViewController {
+    + index(): String
+  }
+
+  class LoginRequest {
+    - nombre: String
+    - password: String
+    + getNombre(): String
+    + setNombre(String): void
+    + getPassword(): String
+    + setPassword(String): void
+  }
+}
+
+package "model" {
+  class Pedido {
+    - id: int
+    - cliente: String
+    - detalles: String
+    + getters/setters...
+  }
+
+  interface IOrderManager {
+    + crearPedido(p: Pedido): boolean
+    + actualizarPedido(p: Pedido): boolean
+    + eliminarPedido(id: int): boolean
+    + buscarPedidoPorClienteYId(c: String, id: int): Pedido
+    + obtenerTodos(): List<Pedido>
+  }
+
+  class OrderManager implements IOrderManager {
+    - pedidos: List<Pedido>
+    - paymentProcessor: IPaymentProcessor
+    + métodos de gestión de pedidos
+  }
+
+  interface IPaymentProcessor {
+    + procesarPago(pedido: Pedido): boolean
+  }
+
+  class PaymentProcessor implements IPaymentProcessor {
+    + procesarPago(pedido: Pedido): boolean
+  }
+
+  interface IAuthenticator {
+    + comprobacion(usuario: String, password: String): boolean
+  }
+
+  class Authenticator implements IAuthenticator {
+    + comprobacion(usuario: String, password: String): boolean
+  }
+
+  interface IDataBaseManager {
+    + método(s) para conexión y operaciones DB
+  }
+
+  class DataBaseManager implements IDataBaseManager {
+    - static instancia: DataBaseManager
+    + getInstance(): DataBaseManager
+    + métodos DB...
+  }
+}
+
+PedidoController --> OrderManager
+LoginController --> Authenticator
+LoginController --> LoginRequest
+OrderManager --> Pedido
+OrderManager --> IPaymentProcessor
+PaymentProcessor ..|> IPaymentProcessor
+OrderManager ..|> IOrderManager
+Authenticator ..|> IAuthenticator
+DataBaseManager ..|> IDataBaseManager
+Authenticator --> DataBaseManager
+
+@enduml

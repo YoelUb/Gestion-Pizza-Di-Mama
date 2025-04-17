@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Trabajador - Pizzería Di Mama</title>
+    <link rel="stylesheet" href="/css/styleLogin.css">
+</head>
+<body>
+
+<header>🔐 Acceso para Trabajadores</header>
+
+<div class="container">
+    <form id="loginForm">
+        <label for="username">Nombre de usuario</label>
+        <input type="text" id="username" required>
+
+        <label for="password">Contraseña</label>
+        <input type="password" id="password" required>
+
+        <button type="submit">Ingresar</button>
+        <div class="error" id="loginError"></div>
+    </form>
+    <button onclick="window.location.href='index.html'" style="margin-top: 1rem;">
+        ⬅️ Volver al inicio
+    </button>
+</div>
+
+<script>
+    document.getElementById("loginForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const nombre = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+
+        fetch("http://localhost:8080/api/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ nombre, password })
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data === true) {
+                    // ✅ Guardar el nombre del usuario en localStorage
+                    localStorage.setItem("usuario", nombre);
+
+                    // ✅ Redirigir a la página del trabajador
+                    window.location.href = "trabajador.html";
+                } else {
+                    document.getElementById("loginError").textContent = "Credenciales incorrectas";
+                }
+            })
+            .catch(err => {
+                document.getElementById("loginError").textContent = "Error al conectar con el servidor";
+                console.error(err);
+            });
+    });
+</script>
+
+</body>
+</html>

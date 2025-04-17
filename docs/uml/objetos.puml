@@ -1,0 +1,15 @@
+@startuml UML_Objetos_GestionPizzaDiMama
+
+object pedidoController
+object loginController
+object OrderManager
+object PaymentProcessor
+object Authenticator
+object DataBaseManager
+
+pedidoController --> OrderManager : orderManager
+loginController --> Authenticator : authenticator
+OrderManager --> PaymentProcessor : paymentProcessor
+Authenticator --> DataBaseManager : dbManager
+
+@enduml
