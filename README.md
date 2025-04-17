@@ -83,5 +83,3 @@ Las clases de alto nivel dependen de abstracciones:
 
 ---
 
-## 📁 Estructura del Proyecto
-
