@@ -83,3 +83,28 @@ Las clases de alto nivel dependen de abstracciones:
 
 ---
 
+## 📁 Estructura del Proyecto
+
+
+
+Diagrama de Clases:
+
+
+
+![clases.png](docs/arquitectura/clases.png)
+
+
+
+Diagrama de Componentes:
+
+
+
+![componentes.png](docs/arquitectura/componentes.png)
+
+
+
+Diagrama de Objetos:
+
+
+
+![objetos.png](docs/arquitectura/objetos.png)
