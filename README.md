@@ -152,8 +152,14 @@ Diagrama de Objetos:
   - Usuario: `Yoel`
   - Contraseña: `1234`
   - Con estas credenciales podrás iniciar sesión como trabajador y gestionar los pedidos.
+ 
+
+### Enlace
+
+Enlace al repositorio: https://github.com/YoelUb/Gestion-Pizza-Di-Mama
 
 
 ### Dudas
 
 Si tienes dudas sobre la instalación o configuración, no dudes en abrir un issue en el repositorio o contactarme directamente: yurqubar@myuax.com.
+
