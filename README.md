@@ -108,3 +108,52 @@ Diagrama de Objetos:
 
 
 ![objetos.png](docs/arquitectura/objetos.png)
+
+
+## 🧩 Instalación y Configuración de Base de Datos
+
+### 📦 Requisitos
+
+- Java 21+
+- Maven
+- MySQL o MariaDB
+- IDE (IntelliJ IDEA, VSCode, etc.)
+
+---
+
+### ⚙️ Configuración de la Base de Datos
+
+1. Abre tu terminal y accede a tu servidor MySQL:
+   ```bash
+   mysql -u tu_usuario -p
+   ```
+   
+2.  Crea la base de datos:
+   ```sql
+   CREATE DATABASE pizzeriaDiMama;
+   USE pizzeriaDiMama;
+   ```
+
+3. Importa el archivo sql con la estructura de la base de datos:
+   ```sql
+   mysql -u tu_usuario -p pizzeriaDiMama < pizzeriaDiMama.sql
+   ```
+   
+4. Verifica que la tabla `pedidos` se haya creado correctamente:
+   ```sql
+    SELECT * FROM pedidos;
+    ```
+
+- Deberías ver una tabla vacía con las columnas `id`, `nombre`, `estado` y `precio`.
+
+### Datos importantes
+
+- En la tabla trabajadores, los datos de usuario y contraseña serviran para iniciar sesión en la aplicación. Muestro ejemplo:
+  - Usuario: `Yoel`
+  - Contraseña: `1234`
+  - Con estas credenciales podrás iniciar sesión como trabajador y gestionar los pedidos.
+
+
+### Dudas
+
+Si tienes dudas sobre la instalación o configuración, no dudes en abrir un issue en el repositorio o contactarme directamente: yurqubar@myuax.com.
